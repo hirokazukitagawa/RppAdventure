@@ -37,6 +37,10 @@ namespace RpgAdventure
             m_ChController.transform.rotation = Quaternion.Euler(0, camRotation.eulerAngles.y, 0);
 
             // for test
+
+
+
+
         }
     }
 }
