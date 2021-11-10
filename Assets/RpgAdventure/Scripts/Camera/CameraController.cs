@@ -1,24 +1,28 @@
 using Cinemachine;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+namespace RppAdventure
 {
-    [SerializeField]
-    CinemachineFreeLook freeLookCamera;
 
-    // Update is called once per frame
-    void Update()
+    public class CameraController : MonoBehaviour
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            freeLookCamera.m_XAxis.m_MaxSpeed = 400;
-            freeLookCamera.m_YAxis.m_MaxSpeed = 10;
-        }
+        [SerializeField]
+        CinemachineFreeLook freeLookCamera;
 
-        if (Input.GetMouseButtonUp(1))
+        // Update is called once per frame
+        void Update()
         {
-            freeLookCamera.m_XAxis.m_MaxSpeed = 0;
-            freeLookCamera.m_YAxis.m_MaxSpeed = 0;
+            if (Input.GetMouseButtonDown(1))
+            {
+                freeLookCamera.m_XAxis.m_MaxSpeed = 400;
+                freeLookCamera.m_YAxis.m_MaxSpeed = 10;
+            }
+
+            if (Input.GetMouseButtonUp(1))
+            {
+                freeLookCamera.m_XAxis.m_MaxSpeed = 0;
+                freeLookCamera.m_YAxis.m_MaxSpeed = 0;
+            }
         }
     }
 }
