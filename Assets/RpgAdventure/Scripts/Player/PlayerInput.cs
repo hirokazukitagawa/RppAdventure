@@ -19,6 +19,14 @@ namespace RppAdventure
             }
         }
 
+        public bool IsMoveInput
+        {
+            get
+            {
+                return Mathf.Approximately(MoveInput.magnitude, 0) == false;
+            }
+        }
+
         // Update is called once per frame
         void Update()
         {
