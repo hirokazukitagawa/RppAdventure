@@ -5,14 +5,22 @@ using UnityEngine;
 namespace RppAdventure
 {
     public class PlayerController : MonoBehaviour
-    {
-        const float k_Acceleration = 20.0f;
-        const float k_Deceleration = 35.0f;
+    { 
 
         public float maxForwardSpeed = 8.0f;
         public float rotationSpeed;
         public float m_MaxRotationSpeed = 1200;
         public float m_MinRotationSpeed = 800;
+        public static PlayerController Instance
+        {
+            get
+            {
+                return s_Instance;
+            }
+        }
+
+        const float k_Acceleration = 20.0f;
+        const float k_Deceleration = 35.0f;
 
         private PlayerInput m_PlayerInput;
         private CharacterController m_ChController;
@@ -24,14 +32,16 @@ namespace RppAdventure
         private float m_ForwardSpeed;
         private Quaternion m_CameraRotation;
         private Quaternion m_TargetRotation;
-
+        private static PlayerController s_Instance;
 
         private void Awake()
         {
             m_ChController = GetComponent<CharacterController>();
             m_PlayerInput = GetComponent<PlayerInput>();
-            m_CameraController = GetComponent<CameraController>();
+            m_CameraController = Camera.main.GetComponent<CameraController>();
             m_Animator = GetComponent<Animator>();
+
+            s_Instance = this;
         }
         private void FixedUpdate()
         {
@@ -49,6 +59,12 @@ namespace RppAdventure
             }
             
         }
+
+        private void OnAnimatorMove()
+        {
+            m_ChController.Move(m_Animator.deltaPosition);
+        }
+
 
         private void ComputeMovement()
         {
@@ -70,12 +86,21 @@ namespace RppAdventure
             Vector3 moveInput = m_PlayerInput.MoveInput.normalized;
             Vector3 cameraDirection = Quaternion.Euler(
                 0,
-                m_CameraController.freeLookCamera.m_XAxis.Value,
+                m_CameraController.PlayerCam.m_XAxis.Value,
                 0
                 ) * Vector3.forward;
 
-            Quaternion movementRotation = Quaternion.FromToRotation(Vector3.forward, moveInput);
-            Quaternion targetRotation = Quaternion.LookRotation(movementRotation * cameraDirection);
+            Quaternion targetRotation;
+
+            if (Mathf.Approximately(Vector3.Dot(moveInput, Vector3.forward), -1.0f))
+            {
+                targetRotation = Quaternion.LookRotation(-cameraDirection);
+            }
+            else
+            {
+                Quaternion movementRotation = Quaternion.FromToRotation(Vector3.forward, moveInput);
+                targetRotation = Quaternion.LookRotation(movementRotation * cameraDirection);
+            }
 
             m_TargetRotation = targetRotation;
         }
