@@ -76,7 +76,7 @@ namespace RppAdventure
             m_ForwardSpeed = Mathf.MoveTowards(
                 m_ForwardSpeed,
                 m_DesiredForwardSpeed,
-                Time.deltaTime);
+                Time.deltaTime * accekeration);
 
             m_Animator.SetFloat(m_HashForwardSpeed, m_ForwardSpeed);
         }
