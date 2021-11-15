@@ -11,6 +11,7 @@ namespace RppAdventure
         public float rotationSpeed;
         public float m_MaxRotationSpeed = 1200;
         public float m_MinRotationSpeed = 800;
+        public float gravity = 20.0f;
         public static PlayerController Instance
         {
             get
@@ -30,6 +31,7 @@ namespace RppAdventure
         private readonly int m_HashForwardSpeed = Animator.StringToHash("ForwardSpeed");
         private float m_DesiredForwardSpeed;
         private float m_ForwardSpeed;
+        private float m_VerticalSpeed;
         private Quaternion m_CameraRotation;
         private Quaternion m_TargetRotation;
         private static PlayerController s_Instance;
@@ -45,7 +47,8 @@ namespace RppAdventure
         }
         private void FixedUpdate()
         {
-            ComputeMovement();
+            ComputeForwardMovement();
+            ComputeVirticalMovement();
             ComputeRotation();
 
             if (m_PlayerInput.IsMoveInput)
@@ -62,11 +65,17 @@ namespace RppAdventure
 
         private void OnAnimatorMove()
         {
-            m_ChController.Move(m_Animator.deltaPosition);
+            Vector3 movement = m_Animator.deltaPosition;
+            movement += m_VerticalSpeed * Vector3.up * Time.fixedDeltaTime;
+            m_ChController.Move(movement);
         }
 
+        private void ComputeVirticalMovement()
+        {
+            m_VerticalSpeed = -gravity;
+        }
 
-        private void ComputeMovement()
+        private void ComputeForwardMovement()
         {
             Vector3 moveInput = m_PlayerInput.MoveInput.normalized;
             m_DesiredForwardSpeed = moveInput.magnitude * maxForwardSpeed;
