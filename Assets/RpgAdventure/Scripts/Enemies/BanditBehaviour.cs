@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,14 +11,17 @@ namespace RppAdventure
         public float detectionRadius = 10.0f;
         public float detectionAngle = 90.0f;
         public float timeToStopPursuit = 2.0f;
+        public float timeToWaitOnPursuit = 2.0f;
 
         private PlayerController m_Target;
         private NavMeshAgent m_NavMeshAgent;
         private float m_TimeSinceLostTarget = 0;
+        private Vector3 m_OriginPosition;
 
         private void Awake()
         {
             m_NavMeshAgent = GetComponent<NavMeshAgent>();
+            m_OriginPosition = transform.position;
         }
 
 
@@ -43,6 +47,8 @@ namespace RppAdventure
                     if (m_TimeSinceLostTarget >= timeToStopPursuit)
                     {
                         m_Target = null;
+                        m_NavMeshAgent.isStopped = true;
+                        StartCoroutine(WaitOnPursuit());
                     }
                 }
                      else
@@ -52,6 +58,13 @@ namespace RppAdventure
                  }
 
 
+        }
+
+        private IEnumerator WaitOnPursuit()
+        {
+            yield return new WaitForSeconds(timeToWaitOnPursuit);
+            m_NavMeshAgent.isStopped = false;
+            m_NavMeshAgent.SetDestination(m_OriginPosition);
         }
 
         private PlayerController LookForPlayer()
