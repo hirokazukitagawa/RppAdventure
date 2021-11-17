@@ -23,5 +23,10 @@ public class EnemyController : MonoBehaviour
         }
         m_NavMeshAgent.speed =
             (m_Animator.deltaPosition / Time.fixedDeltaTime).magnitude * m_SpeedModifier;
+        Debug.Log(m_NavMeshAgent.destination);
+    }
+    public bool SetFollowTarget(Vector3 position)
+    {
+        return m_NavMeshAgent.SetDestination(position);
     }
 }
