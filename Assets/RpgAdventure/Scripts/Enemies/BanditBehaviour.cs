@@ -19,6 +19,7 @@ namespace RppAdventure
         private Vector3 m_OriginPosition;
         private Animator m_Animator;
         private readonly int m_HashInPursuit = Animator.StringToHash("InPursuit");
+        private readonly int m_HashNearBase = Animator.StringToHash("NearBase");
 
         private void Awake()
         {
@@ -61,7 +62,10 @@ namespace RppAdventure
                     m_TimeSinceLostTarget = 0;
                     }
                  }
+            Vector3 toBase = m_OriginPosition - transform.position;
+            toBase.y = 0;
 
+            m_Animator.SetBool(m_HashNearBase, toBase.magnitude < 0.01f);
 
         }
 
