@@ -17,11 +17,14 @@ namespace RppAdventure
         private NavMeshAgent m_NavMeshAgent;
         private float m_TimeSinceLostTarget = 0;
         private Vector3 m_OriginPosition;
+        private Animator m_Animator;
+        private readonly int m_HashInPursuit = Animator.StringToHash("InPursuit");
 
         private void Awake()
         {
             m_NavMeshAgent = GetComponent<NavMeshAgent>();
             m_OriginPosition = transform.position;
+            m_Animator = GetComponent<Animator>();
         }
 
 
@@ -39,6 +42,7 @@ namespace RppAdventure
             else
             {
                 m_NavMeshAgent.SetDestination(m_Target.transform.position);
+                m_Animator.SetBool(m_HashInPursuit, true);
 
                 if (target == null)
                 {
@@ -48,6 +52,7 @@ namespace RppAdventure
                     {
                         m_Target = null;
                         m_NavMeshAgent.isStopped = true;
+                        m_Animator.SetBool(m_HashInPursuit, false);
                         StartCoroutine(WaitOnPursuit());
                     }
                 }
