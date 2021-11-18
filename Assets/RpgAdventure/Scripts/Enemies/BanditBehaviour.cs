@@ -11,14 +11,21 @@ namespace RppAdventure
 
         public float timeToStopPursuit = 2.0f;
         public float timeToWaitOnPursuit = 2.0f;
+        public float attackDistance = 1.1f;
+
         public PlayerScanner playerScanner;
+
         private PlayerController m_Target;
         private EnemyController m_EnemyController;
+
         private float m_TimeSinceLostTarget = 0;
+
         private Vector3 m_OriginPosition;
         private Animator m_Animator;
+
         private readonly int m_HashInPursuit = Animator.StringToHash("InPursuit");
         private readonly int m_HashNearBase = Animator.StringToHash("NearBase");
+        private readonly int m_HashAttack = Animator.StringToHash("Attack");
 
         private void Awake()
         {
@@ -41,8 +48,17 @@ namespace RppAdventure
             }
             else
             {
-                m_EnemyController.SetFollowTarget(m_Target.transform.position);
-                m_Animator.SetBool(m_HashInPursuit, true);
+                Vector3 toTarget = m_Target.transform.position - transform.position;
+                if (toTarget.magnitude <= attackDistance)
+                {
+                    m_EnemyController.stopFollowTarget();
+                    m_Animator.SetTrigger(m_HashAttack);
+                }
+                else
+                {
+                    m_Animator.SetBool(m_HashInPursuit, true);
+                    m_EnemyController.FollowTarget(m_Target.transform.position);
+                }
 
                 if (target == null)
                 {
@@ -70,7 +86,7 @@ namespace RppAdventure
         private IEnumerator WaitOnPursuit()
         {
             yield return new WaitForSeconds(timeToWaitOnPursuit);
-            m_EnemyController.SetFollowTarget(m_OriginPosition);
+            m_EnemyController.FollowTarget(m_OriginPosition);
         }
 
 
