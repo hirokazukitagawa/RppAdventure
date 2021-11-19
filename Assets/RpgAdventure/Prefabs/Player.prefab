@@ -5683,6 +5683,7 @@ MonoBehaviour:
   rotationSpeed: 5
   m_MaxRotationSpeed: 1200
   m_MinRotationSpeed: 800
+  gravity: 10
 --- !u!114 &2912482739349619048
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1273,6 +1273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeToStopPursuit: 1
   timeToWaitOnPursuit: 1
+  attackDistance: 1.1
   playerScanner:
     detectionRadius: 10
     detectionAngle: 90
